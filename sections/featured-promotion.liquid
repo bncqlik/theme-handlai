@@ -1,0 +1,366 @@
+{% liquid
+  assign theme_rtl = false
+  if settings.enable_rtl and settings.langauges_rtl == blank
+    assign theme_rtl = true
+  endif
+
+  if settings.enable_rtl and settings.langauges_rtl != blank
+    assign rtl_languages = settings.langauges_rtl | split: ','
+    for language in rtl_languages
+      if language == request.locale.iso_code
+        assign theme_rtl = true
+      endif
+    endfor
+  endif
+%}
+
+{{ 'featured-promotion.css' | asset_url | stylesheet_tag }}
+<!-- https://prnt.sc/FzP_T1vd2bm1 -->
+<style>
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.mobile_padding_top }}px;
+    padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+</style>
+
+{% if theme_rtl %}
+{{ 'featured-promotion-rtl.css' | asset_url | stylesheet_tag }}
+{% endif %}
+  
+{%- liquid
+  assign container = ''
+  if section.settings.container == 'container'
+    assign container = 'container'
+  elsif section.settings.container == 'container-fluid'
+    assign container = 'container-fluid'
+  else
+    assign container = 'container-fluid px-0'
+  endif
+-%}
+<div class="shipping__section section-{{ section.id }}-padding color-{{ section.settings.color_scheme }}">
+  <div class="{{ container }}">
+    <div class="promotion--grid promotion--desktop-column-{{ section.settings.desktop_column }} promotion--laptop-column-{{ section.settings.laptop_column }} promotion--mobile-column-{{ section.settings.mobile_column }}">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'featured_promotion' -%}
+            <div
+              class="promotion--card text-{{ section.settings.alignment }} promotion--card-icon--{{ section.settings.icon_position }}"
+              {{ block.shopify_attributes }}
+            >
+              <div class="promotion--card-icon">
+                {%- render 'icon-featured-promotion', icon: block.settings.icon -%}
+              </div>
+              <div class="promotion--card--content">
+                <h2 class="shipping__items--title {{ section.settings.heading_size }}">{{ block.settings.heading }}</h2>
+                <p class="shipping__items--desc">{{ block.settings.subheading }}</p>
+              </div>
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+ {
+   "name": "Featured promotion",
+   "settings": [
+      {
+        "type": "select",
+        "id": "container",
+        "label": "Page width",
+        "default": "container-fluid",
+        "options": [
+          {
+            "value": "container",
+            "label": "Boxed"
+          },
+          {
+            "value": "container-fluid",
+            "label": "Full width"
+          }
+        ]
+      },
+     {
+       "type": "select",
+       "id": "heading_size",
+       "options": [
+         {
+           "value": "h5",
+           "label": "Small"
+         },
+         {
+           "value": "h4",
+           "label": "Medium"
+         },
+         {
+           "value": "h3",
+           "label": "Large"
+         }
+       ],
+       "default": "h4",
+       "label": "Heading size"
+     },
+     {
+        "type": "select",
+        "id": "desktop_column",
+        "label": "Number of columns on desktop",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          }
+        ],
+        "default": "3"
+      },
+    {
+        "type": "select",
+        "id": "laptop_column",
+        "label": "Number of columns on laptop",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          }
+        ],
+        "default": "3"
+      },
+    {
+        "type": "select",
+        "id": "mobile_column",
+        "label": "Number of columns on mobile",
+        "options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          }
+        ],
+        "default": "1"
+      },
+     {
+      "type": "select",
+      "id": "alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+		{
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center",
+      "label": "Content alignment"
+    },
+     {
+       "type": "header",
+       "content": "Promotion card"
+     },
+     {
+        "type": "select",
+        "id": "icon_position",
+        "label": "Icon position",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          },
+          {
+            "value": "left",
+            "label": "Left"
+          }
+        ],
+        "default": "top"
+      },
+    {
+       "type": "header",
+       "content": "Section padding"
+     },
+     {
+           "type": "paragraph",
+           "content": "Desktop"
+         },
+         {
+           "type": "range",
+           "id": "padding_top",
+           "min": 0,
+           "max": 150,
+           "step": 5,
+           "unit": "px",
+           "label": "Padding top",
+           "default": 50
+         },
+         {
+           "type": "range",
+           "id": "padding_bottom",
+           "min": 0,
+           "max": 150,
+           "step": 5,
+           "unit": "px",
+           "label": "Padding bottom",
+           "default": 50
+         },
+         {
+           "type": "paragraph",
+           "content": "Mobile"
+         },
+         {
+           "type": "range",
+           "id": "mobile_padding_top",
+           "min": 0,
+           "max": 150,
+           "step": 5,
+           "unit": "px",
+           "label": "Padding top",
+           "default": 50
+         },
+         {
+           "type": "range",
+           "id": "mobile_padding_bottom",
+           "min": 0,
+           "max": 150,
+           "step": 5,
+           "unit": "px",
+           "label": "Padding bottom",
+           "default": 50
+         },
+       {
+       "type": "header",
+       "content": "Colors"
+     },
+         
+    {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "t:sections.all.colors.label",
+        "default": "background-1"
+      }
+     
+],
+   "blocks": [
+     {
+       "type": "featured_promotion",
+       "name": "Featured promotion",
+       "settings": [
+         {
+           "type": "text",
+           "id": "heading",
+           "default": "Heading",
+           "label": "Heading"
+         },
+	  {
+           "type": "textarea",
+           "id": "subheading",
+           "default": "Pair text with an icon to focus on your store's features.",
+           "label": "Subheading"
+         },
+	  {
+           "type": "select",
+           "id": "icon",
+           "options": [
+             {
+               "value": "truck",
+               "label": "Truck"
+             },
+             {
+               "value": "return",
+               "label": "Return"
+             },
+             {
+               "value": "payment",
+               "label": "Payment"
+             },
+             {
+               "value": "gift",
+               "label": "Gift"
+             },
+             {
+               "value": "chat",
+               "label": "Chat"
+             }
+           ],
+           "default": "truck",
+           "label": "Icon"
+         }
+       ]
+     }
+   ],
+"presets": [
+     {
+       "name": "Featured promotion",
+	"blocks":[
+           {
+               "type": "featured_promotion",
+			"settings":{
+                    "heading":"Free Shipping",
+				 "subheading":"Pair text with an icon to focus on your store's features.",
+				 "icon": "truck"
+               }
+           },
+		{
+               "type": "featured_promotion",
+			"settings":{
+                    "heading":"Free Returns",
+				 "subheading":"Pair text with an icon to focus on your store's features.",
+				 "icon": "return"
+               }
+           },
+		{
+               "type": "featured_promotion",
+			"settings":{
+                    "heading":"Secure Payment",
+				 "subheading":"Pair text with an icon to focus on your store's features.",
+				 "icon": "payment"
+               }
+           }
+         ]
+     }
+   ],
+   "disabled_on": {
+    "groups": ["header","footer"]
+  }
+ }
+{% endschema %}

@@ -1,0 +1,84 @@
+.promotion--card-icon svg {
+  width: 3rem;
+  display: inline-block;
+  color: rgba(var(--color-foreground));
+}
+.promotion--grid {
+  display: grid;
+  gap: 3rem;
+}
+@media only screen and (min-width: 1200px) {
+  .promotion--desktop-column-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .promotion--desktop-column-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .promotion--desktop-column-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .promotion--desktop-column-5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+@media only screen and (min-width: 750px) and (max-width: 1199px) {
+  .promotion--laptop-column-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .promotion--laptop-column-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .promotion--laptop-column-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media only screen and (max-width: 749px) {
+  .promotion--mobile-column-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+h2.shipping__items--title {
+  margin-bottom: 0.8rem;
+}
+.promotion--card-icon {
+  line-height: 1;
+}
+.promotion--card:not(.promotion--card-icon--top):not(
+    .promotion--card-icon--bottom
+  )
+  .promotion--card-icon {
+  max-width: 3rem;
+}
+.promotion--card-icon--top .promotion--card-icon {
+  margin-bottom: 1.5rem;
+}
+.promotion--card:not(.promotion--card-icon--top) {
+  display: flex;
+  gap: 1.5rem;
+}
+.promotion--card.promotion--card-icon--left {
+  text-align: left;
+}
+.promotion--card.promotion--card-icon--right {
+  text-align: right;
+  flex-direction: row-reverse;
+}
+.promotion--card.promotion--card-icon--bottom {
+  flex-direction: column-reverse;
+}
+@media only screen and (max-width: 749px) {
+  .promotion--card:not(.promotion--card-icon--top) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .promotion--card.promotion--card-icon--left {
+    text-align: center;
+  }
+  .promotion--card.promotion--card-icon--right {
+    text-align: center;
+  }
+  .promotion--card.promotion--card-icon--bottom {
+    flex-direction: column-reverse;
+  }
+}
